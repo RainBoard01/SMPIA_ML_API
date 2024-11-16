@@ -1,0 +1,3 @@
+[submodule "SMPIA_ML_MODEL"]
+	path = SMPIA_ML_MODEL
+	url = https://github.com/RainBoard01/SMPIA_ML_MODEL.git
