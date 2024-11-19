@@ -8,7 +8,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, ValidationError
 
-from src.database import MongoDBConnectionManager
+# from src.database import MongoDBConnectionManager
 from src.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_DURATION_MINUTES
 
 
@@ -125,20 +125,20 @@ async def get_current_user(
         token_data = TokenData(scopes=token_scopes, username=username)
     except (JWTError, ValidationError):
         raise credentials_exception
-    async with MongoDBConnectionManager() as db:
-        usernamestring = token_data.username if token_data.username else ""
-        user = await get_user(db, username=usernamestring)
-    if user is None:
-        raise credentials_exception
-    for scope in security_scopes.scopes:
-        if scope not in token_data.scopes or scope not in user.scopes:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Not enough permissions",
-                headers={"WWW-Authenticate": authenticate_value},
-            )
+    # async with MongoDBConnectionManager() as db:
+    #     usernamestring = token_data.username if token_data.username else ""
+    #     user = await get_user(db, username=usernamestring)
+    # if user is None:
+    #     raise credentials_exception
+    # for scope in security_scopes.scopes:
+    #     if scope not in token_data.scopes or scope not in user.scopes:
+    #         raise HTTPException(
+    #             status_code=status.HTTP_401_UNAUTHORIZED,
+    #             detail="Not enough permissions",
+    #             headers={"WWW-Authenticate": authenticate_value},
+    #         )
 
-    return user
+    return None
 
 
 async def current_active_user(current_user: User = Depends(get_current_user)):
@@ -147,17 +147,17 @@ async def current_active_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-async def create_admin_user():
-    async with MongoDBConnectionManager() as db:
-        user = await db.users.find_one()
-        if user:
-            return None
+# async def create_admin_user():
+#     async with MongoDBConnectionManager() as db:
+#         user = await db.users.find_one()
+#         if user:
+#             return None
 
-        admin_user = UserInDB(
-            username="admin",
-            hashed_password=get_password_hash("admin"),
-            scopes=list(SCOPES.keys()),
-            disabled=False,
-        )
-        await db.users.insert_one(admin_user.model_dump())
-        return User(**admin_user.model_dump())
+#         admin_user = UserInDB(
+#             username="admin",
+#             hashed_password=get_password_hash("admin"),
+#             scopes=list(SCOPES.keys()),
+#             disabled=False,
+#         )
+#         await db.users.insert_one(admin_user.model_dump())
+#         return User(**admin_user.model_dump())
