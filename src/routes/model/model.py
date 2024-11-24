@@ -35,7 +35,6 @@ async def predict_by_path(path:str):
 	'/predict-by-file', tags=["Model"]
 )
 async def predict_by_file(file: UploadFile = File(...)):
-    print(file)
     try:
         # Save the file in the server in temp folder, if not exists create it
         import os
