@@ -1,7 +1,7 @@
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, HTTPException, Depends, Security, status, File, UploadFile
-from SMPIA_ML_MODEL.predecir_lstm import predict
+from SMPIA_ML_MODEL.predict import predict
 import shutil
 import requests
 
